@@ -232,7 +232,7 @@ func guestCREATE(c *Config, guest_name string, disk_store string,
 			extra_params = "--X:injectOvfEnv --allowExtraConfig --powerOn "
 
 			for ovf_prop_key, ovf_prop_value := range ovf_properties {
-				extra_params = fmt.Sprintf("%s --prop:%s='%s' ", extra_params, ovf_prop_key, ovf_prop_value)
+				extra_params = fmt.Sprintf("%s --prop:%s=\"%s\" ", extra_params, ovf_prop_key, ovf_prop_value)
 			}
 			log.Println("[guestCREATE] ovf_properties extra_params: " + extra_params)
 		}
