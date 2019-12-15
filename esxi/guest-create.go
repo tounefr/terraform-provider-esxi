@@ -239,46 +239,6 @@ func guestCREATE(c *Config, guest_name string, disk_store string,
 		ovf_cmd := fmt.Sprintf("/usr/bin/ovftool --acceptAllEulas --noSSLVerify --X:useMacNaming=false %s "+
 			"-dm=%s --name='%s' --overwrite -ds='%s' %s '%s' '%s'", extra_params, boot_disk_type, guest_name, disk_store, net_param, src_path, dst_path)
 
-		if runtime.GOOS == "windows" {
-			osShellCmd = "cmd.exe"
-			osShellCmdOpt = "/c"
-
-			ovf_cmd = strings.Replace(ovf_cmd, "'", "\"", -1)
-
-			var ovf_bat = "ovf_cmd.bat"
-
-			_, err = os.Stat(ovf_bat)
-
-			// delete file if exists
-			if os.IsExist(err) {
-				err = os.Remove(ovf_bat)
-				if err != nil {
-					return "", fmt.Errorf("Unable to delete %s: %s\n", ovf_bat, err.Error())
-				}
-			}
-
-			//  create new batch file
-			file, err := os.Create(ovf_bat)
-			if err != nil {
-				return "", fmt.Errorf("Unable to create %s: %s\n", ovf_bat, err.Error())
-				defer file.Close()
-			}
-
-			_, err = file.WriteString(strings.Replace(ovf_cmd, "%", "%%", -1))
-			if err != nil {
-				return "", fmt.Errorf("Unable to write to %s: %s\n", ovf_bat, err.Error())
-				defer file.Close()
-			}
-
-			err = file.Sync()
-			defer file.Close()
-			ovf_cmd = ovf_bat
-
-		} else {
-			osShellCmd = "/bin/bash"
-			osShellCmdOpt = "-c"
-		}
-
 		//  Execute ovftool script (or batch) here.
 		cmd := exec.Command(ovf_cmd)
 
