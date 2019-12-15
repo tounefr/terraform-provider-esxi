@@ -25,7 +25,6 @@ func guestCREATE(c *Config, guest_name string, disk_store string,
 
 	var memsize, numvcpus, virthwver int
 	var boot_disk_vmdkPATH, remote_cmd, vmid, stdout, vmx_contents string
-	var osShellCmd, osShellCmdOpt string
 	var out bytes.Buffer
 	var err error
 	var is_ovf_properties bool
