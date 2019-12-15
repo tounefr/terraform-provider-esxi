@@ -232,12 +232,12 @@ func guestCREATE(c *Config, guest_name string, disk_store string,
 			extra_params = "--X:injectOvfEnv --allowExtraConfig --powerOn "
 
 			for ovf_prop_key, ovf_prop_value := range ovf_properties {
-				extra_params = fmt.Sprintf("%s --prop:%s=\"%s\" ", extra_params, ovf_prop_key, ovf_prop_value)
+				extra_params = fmt.Sprintf("%s --prop:%s='%s' ", extra_params, ovf_prop_key, ovf_prop_value)
 			}
 			log.Println("[guestCREATE] ovf_properties extra_params: " + extra_params)
 		}
 
-		ovf_cmd := fmt.Sprintf("ovftool --acceptAllEulas --noSSLVerify --X:useMacNaming=false %s "+
+		ovf_cmd := fmt.Sprintf("/usr/bin/ovftool --acceptAllEulas --noSSLVerify --X:useMacNaming=false %s "+
 			"-dm=%s --name='%s' --overwrite -ds='%s' %s '%s' '%s'", extra_params, boot_disk_type, guest_name, disk_store, net_param, src_path, dst_path)
 
 		if runtime.GOOS == "windows" {
@@ -281,7 +281,7 @@ func guestCREATE(c *Config, guest_name string, disk_store string,
 		}
 
 		//  Execute ovftool script (or batch) here.
-		cmd := exec.Command(osShellCmd, osShellCmdOpt, ovf_cmd)
+		cmd := exec.Command(ovf_cmd)
 
 		log.Printf("[guestCREATE] ovf_cmd: %s\n", ovf_cmd)
 
